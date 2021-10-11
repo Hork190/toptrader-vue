@@ -4,12 +4,12 @@
 
 import Overlay from '../../mixins/overlay.js'
 import { layout_cnv } from '../js/layout_cnv.js'
-import Candle from '../primitives/emptyCandle.js'
+import Candle from '../primitives/darkEmptyCandle.js'
 import Volbar from '../primitives/volbar.js'
 import Price from '../primitives/price.js'
 
 export default {
-    name: 'EmptyCandles',
+    name: 'DarkEmptyCandles',
     mixins: [Overlay],
     data() {
         return { price: {} }
@@ -86,13 +86,14 @@ export default {
             }
 
             var cc = cnv.candles
+            // eslint-disable-next-line no-redeclare
             for (var i = 0, n = cc.length; i < n; i++) {
                 new Candle(this, ctx, cc[i])
             }
 
             if (this.price_line) this.price.draw(ctx)
         },
-        use_for() { return ['EmptyCandles'] },
+        use_for() { return ['DarkEmptyCandles'] },
 
         // In case it's added as offchart overlay
         y_range() {

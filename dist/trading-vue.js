@@ -1,5 +1,5 @@
 /*!
- * TradingVue.JS - v1.0.0 - Wed Oct 06 2021
+ * TradingVue.JS - v1.0.0 - Mon Oct 11 2021
  *     https://github.com/tvjsx/trading-vue-js
  *     Copyright (c) 2019 C451 Code's All Right;
  *     Licensed under the MIT license
@@ -395,7 +395,7 @@ module.exports.isSortableArrayLike = function (o) {
 
 /***/ }),
 
-/***/ 594:
+/***/ 196:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5207,7 +5207,6 @@ var Price = /*#__PURE__*/function () {
       };
     },
     init: function init() {
-      console.log("Init 2");
       this.price = new Price(this);
     },
     draw: function draw(ctx) {
@@ -5401,6 +5400,44 @@ var emptyCandle_CandleExt = /*#__PURE__*/function () {
 /* harmony default export */ const EmptyCandlesvue_type_script_lang_js_ = ({
   name: 'EmptyCandles',
   mixins: [overlay],
+  data: function data() {
+    return {
+      price: {}
+    };
+  },
+  // Define internal setting & constants here
+  computed: {
+    sett: function sett() {
+      return this.$props.settings;
+    },
+    show_volume: function show_volume() {
+      return 'showVolume' in this.sett ? this.sett.showVolume : true;
+    },
+    price_line: function price_line() {
+      return 'priceLine' in this.sett ? this.sett.priceLine : true;
+    },
+    colorCandleUp: function colorCandleUp() {
+      return this.sett.colorCandleUp || this.$props.colors.candleUp;
+    },
+    colorCandleDw: function colorCandleDw() {
+      return this.sett.colorCandleDw || this.$props.colors.candleDw;
+    },
+    colorWickUp: function colorWickUp() {
+      return this.sett.colorWickUp || this.$props.colors.wickUp;
+    },
+    colorWickDw: function colorWickDw() {
+      return this.sett.colorWickDw || this.$props.colors.wickDw;
+    },
+    colorWickSm: function colorWickSm() {
+      return this.sett.colorWickSm || this.$props.colors.wickSm;
+    },
+    colorVolUp: function colorVolUp() {
+      return this.sett.colorVolUp || this.$props.colors.volUp;
+    },
+    colorVolDw: function colorVolDw() {
+      return this.sett.colorVolDw || this.$props.colors.volDw;
+    }
+  },
   methods: {
     meta_info: function meta_info() {
       return {
@@ -5409,7 +5446,6 @@ var emptyCandle_CandleExt = /*#__PURE__*/function () {
       };
     },
     init: function init() {
-      console.log("Init");
       this.price = new Price(this);
     },
     draw: function draw(ctx) {
@@ -5456,44 +5492,6 @@ var emptyCandle_CandleExt = /*#__PURE__*/function () {
 
       return [hi, lo];
     }
-  },
-  // Define internal setting & constants here
-  computed: {
-    sett: function sett() {
-      return this.$props.settings;
-    },
-    show_volume: function show_volume() {
-      return 'showVolume' in this.sett ? this.sett.showVolume : true;
-    },
-    price_line: function price_line() {
-      return 'priceLine' in this.sett ? this.sett.priceLine : true;
-    },
-    colorCandleUp: function colorCandleUp() {
-      return this.sett.colorCandleUp || this.$props.colors.candleUp;
-    },
-    colorCandleDw: function colorCandleDw() {
-      return this.sett.colorCandleDw || this.$props.colors.candleDw;
-    },
-    colorWickUp: function colorWickUp() {
-      return this.sett.colorWickUp || this.$props.colors.wickUp;
-    },
-    colorWickDw: function colorWickDw() {
-      return this.sett.colorWickDw || this.$props.colors.wickDw;
-    },
-    colorWickSm: function colorWickSm() {
-      return this.sett.colorWickSm || this.$props.colors.wickSm;
-    },
-    colorVolUp: function colorVolUp() {
-      return this.sett.colorVolUp || this.$props.colors.volUp;
-    },
-    colorVolDw: function colorVolDw() {
-      return this.sett.colorVolDw || this.$props.colors.volDw;
-    }
-  },
-  data: function data() {
-    return {
-      price: {}
-    };
   }
 });
 ;// CONCATENATED MODULE: ./src/components/overlays/EmptyCandles.vue?vue&type=script&lang=js&
@@ -6849,6 +6847,210 @@ var RangeTool_component = normalizeComponent(
 if (false) { var RangeTool_api; }
 RangeTool_component.options.__file = "src/components/overlays/RangeTool.vue"
 /* harmony default export */ const RangeTool = (RangeTool_component.exports);
+;// CONCATENATED MODULE: ./src/components/primitives/darkEmptyCandle.js
+
+
+
+var darkEmptyCandle_CandleExt = /*#__PURE__*/function () {
+  function CandleExt(overlay, ctx, data) {
+    classCallCheck_classCallCheck(this, CandleExt);
+
+    this.ctx = ctx;
+    this.self = overlay;
+    this.style = data.raw[6] || this.self;
+    this.draw(data);
+  }
+
+  createClass_createClass(CandleExt, [{
+    key: "draw",
+    value: function draw(data) {
+      var green = data.raw[4] >= data.raw[1];
+      var body_color = green ? this.style.colorCandleUp : this.style.colorCandleDw;
+      var wick_color = green ? this.style.colorWickUp : this.style.colorWickDw;
+      var w = Math.max(data.w, 1);
+      var hw = Math.max(Math.floor(w * 0.5), 1);
+      var h = Math.abs(data.o - data.c);
+      var max_h = data.c === data.o ? 1 : 2;
+      var x05 = Math.floor(data.x) - 0.5;
+      this.ctx.strokeStyle = "#2ad8a6";
+
+      if (!green) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.h)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.o));
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.l)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.c));
+        this.ctx.stroke();
+      } else {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.h)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.c));
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.l)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.o));
+        this.ctx.stroke();
+      }
+
+      if (data.w > 1.5) {
+        this.ctx.strokeStyle = "#2ad8a6";
+        this.ctx.fillStyle = "white"; // TODO: Move common calculations to layout.js
+
+        var s = green ? 1 : -1;
+        if (green) this.ctx.strokeRect(Math.floor(data.x - hw - 1), data.c, Math.floor(hw * 2 + 1), s * Math.max(h, max_h));else {
+          this.ctx.strokeRect(Math.floor(data.x - hw - 1), data.c, Math.floor(hw * 2 + 1), s * Math.max(h, max_h));
+          this.ctx.fillRect(Math.floor(data.x - hw - 1), data.c, Math.floor(hw * 2 + 1), s * Math.max(h, max_h));
+        }
+      } else {
+        this.ctx.strokeStyle = "#2ad8a6";
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(Math.min(data.o, data.c)));
+        this.ctx.lineTo(x05, Math.floor(Math.max(data.o, data.c)) + (data.o === data.c ? 1 : 0));
+        this.ctx.stroke();
+      }
+    }
+  }]);
+
+  return CandleExt;
+}();
+
+
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/components/overlays/DarkEmptyCandles.vue?vue&type=script&lang=js&
+// Renedrer for candlesticks + volume (optional)
+// It can be used as the main chart or an indicator
+
+
+
+
+
+/* harmony default export */ const DarkEmptyCandlesvue_type_script_lang_js_ = ({
+  name: 'DarkEmptyCandles',
+  mixins: [overlay],
+  data: function data() {
+    return {
+      price: {}
+    };
+  },
+  // Define internal setting & constants here
+  computed: {
+    sett: function sett() {
+      return this.$props.settings;
+    },
+    show_volume: function show_volume() {
+      return 'showVolume' in this.sett ? this.sett.showVolume : true;
+    },
+    price_line: function price_line() {
+      return 'priceLine' in this.sett ? this.sett.priceLine : true;
+    },
+    colorCandleUp: function colorCandleUp() {
+      return this.sett.colorCandleUp || this.$props.colors.candleUp;
+    },
+    colorCandleDw: function colorCandleDw() {
+      return this.sett.colorCandleDw || this.$props.colors.candleDw;
+    },
+    colorWickUp: function colorWickUp() {
+      return this.sett.colorWickUp || this.$props.colors.wickUp;
+    },
+    colorWickDw: function colorWickDw() {
+      return this.sett.colorWickDw || this.$props.colors.wickDw;
+    },
+    colorWickSm: function colorWickSm() {
+      return this.sett.colorWickSm || this.$props.colors.wickSm;
+    },
+    colorVolUp: function colorVolUp() {
+      return this.sett.colorVolUp || this.$props.colors.volUp;
+    },
+    colorVolDw: function colorVolDw() {
+      return this.sett.colorVolDw || this.$props.colors.volDw;
+    }
+  },
+  methods: {
+    meta_info: function meta_info() {
+      return {
+        author: 'C451',
+        version: '1.2.1'
+      };
+    },
+    init: function init() {
+      this.price = new Price(this);
+    },
+    draw: function draw(ctx) {
+      // If data === main candlestick data
+      // render as main chart:
+      if (this.$props.sub === this.$props.data) {
+        var cnv = {
+          candles: this.$props.layout.candles,
+          volume: this.$props.layout.volume
+        }; // Else, as offchart / onchart indicator:
+      } else {
+        cnv = layout_cnv(this);
+      }
+
+      if (this.show_volume) {
+        var cv = cnv.volume;
+
+        for (var i = 0, n = cv.length; i < n; i++) {
+          new VolbarExt(this, ctx, cv[i]);
+        }
+      }
+
+      var cc = cnv.candles; // eslint-disable-next-line no-redeclare
+
+      for (var i = 0, n = cc.length; i < n; i++) {
+        new darkEmptyCandle_CandleExt(this, ctx, cc[i]);
+      }
+
+      if (this.price_line) this.price.draw(ctx);
+    },
+    use_for: function use_for() {
+      return ['DarkEmptyCandles'];
+    },
+    // In case it's added as offchart overlay
+    y_range: function y_range() {
+      var hi = -Infinity,
+          lo = Infinity;
+
+      for (var i = 0, n = this.sub.length; i < n; i++) {
+        var x = this.sub[i];
+        if (x[2] > hi) hi = x[2];
+        if (x[3] < lo) lo = x[3];
+      }
+
+      return [hi, lo];
+    }
+  }
+});
+;// CONCATENATED MODULE: ./src/components/overlays/DarkEmptyCandles.vue?vue&type=script&lang=js&
+ /* harmony default export */ const overlays_DarkEmptyCandlesvue_type_script_lang_js_ = (DarkEmptyCandlesvue_type_script_lang_js_); 
+;// CONCATENATED MODULE: ./src/components/overlays/DarkEmptyCandles.vue
+var DarkEmptyCandles_render, DarkEmptyCandles_staticRenderFns
+;
+
+
+
+/* normalize component */
+;
+var DarkEmptyCandles_component = normalizeComponent(
+  overlays_DarkEmptyCandlesvue_type_script_lang_js_,
+  DarkEmptyCandles_render,
+  DarkEmptyCandles_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var DarkEmptyCandles_api; }
+DarkEmptyCandles_component.options.__file = "src/components/overlays/DarkEmptyCandles.vue"
+/* harmony default export */ const DarkEmptyCandles = (DarkEmptyCandles_component.exports);
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/components/Grid.vue?vue&type=script&lang=js&
 function Gridvue_type_script_lang_js_createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = Gridvue_type_script_lang_js_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -6875,19 +7077,143 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
 
 
 
+
 /* harmony default export */ const Gridvue_type_script_lang_js_ = ({
   name: 'Grid',
-  props: ['sub', 'layout', 'range', 'interval', 'cursor', 'colors', 'overlays', 'width', 'height', 'data', 'grid_id', 'y_transform', 'font', 'tv_id', 'config', 'meta', 'shaders'],
-  mixins: [canvas, uxlist],
   components: {
     Crosshair: components_Crosshair,
     KeyboardListener: KeyboardListener
   },
-  created: function created() {
+  mixins: [canvas, uxlist],
+  props: ['sub', 'layout', 'range', 'interval', 'cursor', 'colors', 'overlays', 'width', 'height', 'data', 'grid_id', 'y_transform', 'font', 'tv_id', 'config', 'meta', 'shaders'],
+  data: function data() {
     var _this = this;
 
+    return {
+      layer_events: {
+        'new-grid-layer': this.new_layer,
+        'delete-grid-layer': this.del_layer,
+        'show-grid-layer': function showGridLayer(d) {
+          _this.renderer.show_hide_layer(d);
+
+          _this.redraw();
+        },
+        'redraw-grid': this.redraw,
+        'layer-meta-props': function layerMetaProps(d) {
+          return _this.$emit('layer-meta-props', d);
+        },
+        'custom-event': function customEvent(d) {
+          return _this.$emit('custom-event', d);
+        }
+      },
+      keyboard_events: {
+        'register-kb-listener': function registerKbListener(event) {
+          _this.$emit('register-kb-listener', event);
+        },
+        'remove-kb-listener': function removeKbListener(event) {
+          _this.$emit('remove-kb-listener', event);
+        },
+        'keyup': function keyup(event) {
+          if (!_this.is_active) return;
+
+          _this.renderer.propagate('keyup', event);
+        },
+        'keydown': function keydown(event) {
+          if (!_this.is_active) return; // TODO: is this neeeded?
+
+          _this.renderer.propagate('keydown', event);
+        },
+        'keypress': function keypress(event) {
+          if (!_this.is_active) return;
+
+          _this.renderer.propagate('keypress', event);
+        }
+      }
+    };
+  },
+  computed: {
+    is_active: function is_active() {
+      return this.$props.cursor.t !== undefined && this.$props.cursor.grid_id === this.$props.grid_id;
+    }
+  },
+  watch: {
+    range: {
+      handler: function handler() {
+        var _this2 = this;
+
+        // TODO: Left-side render lag fix:
+        // Overlay data is updated one tick later than
+        // the main sub. Fast fix is to delay redraw()
+        // call. It will be a solution until a better
+        // one comes by.
+        this.$nextTick(function () {
+          return _this2.redraw();
+        });
+      },
+      deep: true
+    },
+    cursor: {
+      handler: function handler() {
+        if (!this.$props.cursor.locked) this.redraw();
+      },
+      deep: true
+    },
+    overlays: {
+      // Track changes in calc() functions
+      handler: function handler(ovs) {
+        var _iterator = Gridvue_type_script_lang_js_createForOfIteratorHelper(ovs),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var ov = _step.value;
+
+            var _iterator2 = Gridvue_type_script_lang_js_createForOfIteratorHelper(this.$children),
+                _step2;
+
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var comp = _step2.value;
+                if (typeof comp.id !== 'string') continue;
+                var tuple = comp.id.split('_');
+                tuple.pop();
+
+                if (tuple.join('_') === ov.name) {
+                  comp.calc = ov.methods.calc;
+                  if (!comp.calc) continue;
+                  var calc = comp.calc.toString();
+
+                  if (calc !== ov.__prevscript__) {
+                    comp.exec_script();
+                  }
+
+                  ov.__prevscript__ = calc;
+                }
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+      },
+      deep: true
+    },
+    // Redraw on the shader list change
+    shaders: function shaders(n, p) {
+      this.redraw();
+    }
+  },
+  created: function created() {
+    var _this3 = this;
+
     // List of all possible overlays (builtin + custom)
-    this._list = [Spline, Splines, Range, Trades, Channel, Segment, Candles, Volume, Splitters, LineTool, RangeTool, EmptyCandles].concat(this.$props.overlays);
+    this._list = [Spline, Splines, Range, Trades, Channel, Segment, Candles, Volume, Splitters, LineTool, RangeTool, EmptyCandles, DarkEmptyCandles].concat(this.$props.overlays);
     this._registry = {}; // We need to know which components we will use.
     // Custom overlay components overwrite built-ins:
 
@@ -6900,7 +7226,7 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
         info: x.methods.tool()
       });
       use_for.forEach(function (indicator) {
-        _this._registry[indicator] = i;
+        _this3._registry[indicator] = i;
       });
     });
 
@@ -6909,71 +7235,35 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
       args: tools
     });
     this.$on('custom-event', function (e) {
-      return _this.on_ux_event(e, 'grid');
+      return _this3.on_ux_event(e, 'grid');
     });
   },
   beforeDestroy: function beforeDestroy() {
     if (this.renderer) this.renderer.destroy();
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this4 = this;
 
     var el = this.$refs['canvas'];
     this.renderer = new Grid(el, this);
     this.setup();
     this.$nextTick(function () {
-      return _this2.redraw();
-    });
-  },
-  render: function render(h) {
-    var id = this.$props.grid_id;
-    var layout = this.$props.layout.grids[id];
-    return this.create_canvas(h, "grid-".concat(id), {
-      position: {
-        x: 0,
-        y: layout.offset || 0
-      },
-      attrs: {
-        width: layout.width,
-        height: layout.height,
-        overflow: 'hidden'
-      },
-      style: {
-        backgroundColor: this.$props.colors.back
-      },
-      hs: [h(components_Crosshair, {
-        props: this.common_props(),
-        on: this.layer_events
-      }), h(KeyboardListener, {
-        on: this.keyboard_events
-      }), h(UxLayer, {
-        props: {
-          id: id,
-          tv_id: this.$props.tv_id,
-          uxs: this.uxs,
-          colors: this.$props.colors,
-          config: this.$props.config,
-          updater: Math.random()
-        },
-        on: {
-          'custom-event': this.emit_ux_event
-        }
-      })].concat(this.get_overlays(h))
+      return _this4.redraw();
     });
   },
   methods: {
     new_layer: function new_layer(layer) {
-      var _this3 = this;
+      var _this5 = this;
 
       this.$nextTick(function () {
-        return _this3.renderer.new_layer(layer);
+        return _this5.renderer.new_layer(layer);
       });
     },
     del_layer: function del_layer(layer) {
-      var _this4 = this;
+      var _this6 = this;
 
       this.$nextTick(function () {
-        return _this4.renderer.del_layer(layer);
+        return _this6.renderer.del_layer(layer);
       });
       var grid_id = this.$props.grid_id;
       this.$emit('custom-event', {
@@ -6988,19 +7278,19 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
       this.remove_all_ux(layer);
     },
     get_overlays: function get_overlays(h) {
-      var _this5 = this;
+      var _this7 = this;
 
       // Distributes overlay data & settings according
       // to this._registry; returns compo list
       var comp_list = [],
           count = {};
 
-      var _iterator = Gridvue_type_script_lang_js_createForOfIteratorHelper(this.$props.data),
-          _step;
+      var _iterator3 = Gridvue_type_script_lang_js_createForOfIteratorHelper(this.$props.data),
+          _step3;
 
       try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var d = _step.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var d = _step3.value;
           var comp = this._list[this._registry[d.type]];
 
           if (comp) {
@@ -7021,15 +7311,15 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
           }
         }
       } catch (err) {
-        _iterator.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator.f();
+        _iterator3.f();
       }
 
       return comp_list.map(function (x, i) {
         return h(x.cls, {
-          on: _this5.layer_events,
-          attrs: Object.assign(_this5.common_props(), {
+          on: _this7.layer_events,
+          attrs: Object.assign(_this7.common_props(), {
             id: "".concat(x.type, "_").concat(count[x.type]++),
             type: x.type,
             data: x.data,
@@ -7037,8 +7327,8 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
             i0: x.i0,
             tf: x.tf,
             num: i,
-            grid_id: _this5.$props.grid_id,
-            meta: _this5.$props.meta,
+            grid_id: _this7.$props.grid_id,
+            meta: _this7.$props.meta,
             last: x.last
           })
         });
@@ -7078,128 +7368,41 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
       return comp;
     }
   },
-  computed: {
-    is_active: function is_active() {
-      return this.$props.cursor.t !== undefined && this.$props.cursor.grid_id === this.$props.grid_id;
-    }
-  },
-  watch: {
-    range: {
-      handler: function handler() {
-        var _this6 = this;
-
-        // TODO: Left-side render lag fix:
-        // Overlay data is updated one tick later than
-        // the main sub. Fast fix is to delay redraw()
-        // call. It will be a solution until a better
-        // one comes by.
-        this.$nextTick(function () {
-          return _this6.redraw();
-        });
+  render: function render(h) {
+    var id = this.$props.grid_id;
+    var layout = this.$props.layout.grids[id];
+    return this.create_canvas(h, "grid-".concat(id), {
+      position: {
+        x: 0,
+        y: layout.offset || 0
       },
-      deep: true
-    },
-    cursor: {
-      handler: function handler() {
-        if (!this.$props.cursor.locked) this.redraw();
+      attrs: {
+        width: layout.width,
+        height: layout.height,
+        overflow: 'hidden'
       },
-      deep: true
-    },
-    overlays: {
-      // Track changes in calc() functions
-      handler: function handler(ovs) {
-        var _iterator2 = Gridvue_type_script_lang_js_createForOfIteratorHelper(ovs),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var ov = _step2.value;
-
-            var _iterator3 = Gridvue_type_script_lang_js_createForOfIteratorHelper(this.$children),
-                _step3;
-
-            try {
-              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-                var comp = _step3.value;
-                if (typeof comp.id !== 'string') continue;
-                var tuple = comp.id.split('_');
-                tuple.pop();
-
-                if (tuple.join('_') === ov.name) {
-                  comp.calc = ov.methods.calc;
-                  if (!comp.calc) continue;
-                  var calc = comp.calc.toString();
-
-                  if (calc !== ov.__prevscript__) {
-                    comp.exec_script();
-                  }
-
-                  ov.__prevscript__ = calc;
-                }
-              }
-            } catch (err) {
-              _iterator3.e(err);
-            } finally {
-              _iterator3.f();
-            }
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
+      style: {
+        backgroundColor: this.$props.colors.back
+      },
+      hs: [h(components_Crosshair, {
+        props: this.common_props(),
+        on: this.layer_events
+      }), h(KeyboardListener, {
+        on: this.keyboard_events
+      }), h(UxLayer, {
+        props: {
+          id: id,
+          tv_id: this.$props.tv_id,
+          uxs: this.uxs,
+          colors: this.$props.colors,
+          config: this.$props.config,
+          updater: Math.random()
+        },
+        on: {
+          'custom-event': this.emit_ux_event
         }
-      },
-      deep: true
-    },
-    // Redraw on the shader list change
-    shaders: function shaders(n, p) {
-      this.redraw();
-    }
-  },
-  data: function data() {
-    var _this7 = this;
-
-    return {
-      layer_events: {
-        'new-grid-layer': this.new_layer,
-        'delete-grid-layer': this.del_layer,
-        'show-grid-layer': function showGridLayer(d) {
-          _this7.renderer.show_hide_layer(d);
-
-          _this7.redraw();
-        },
-        'redraw-grid': this.redraw,
-        'layer-meta-props': function layerMetaProps(d) {
-          return _this7.$emit('layer-meta-props', d);
-        },
-        'custom-event': function customEvent(d) {
-          return _this7.$emit('custom-event', d);
-        }
-      },
-      keyboard_events: {
-        'register-kb-listener': function registerKbListener(event) {
-          _this7.$emit('register-kb-listener', event);
-        },
-        'remove-kb-listener': function removeKbListener(event) {
-          _this7.$emit('remove-kb-listener', event);
-        },
-        'keyup': function keyup(event) {
-          if (!_this7.is_active) return;
-
-          _this7.renderer.propagate('keyup', event);
-        },
-        'keydown': function keydown(event) {
-          if (!_this7.is_active) return; // TODO: is this neeeded?
-
-          _this7.renderer.propagate('keydown', event);
-        },
-        'keypress': function keypress(event) {
-          if (!_this7.is_active) return;
-
-          _this7.renderer.propagate('keypress', event);
-        }
-      }
-    };
+      })].concat(this.get_overlays(h))
+    });
   }
 });
 ;// CONCATENATED MODULE: ./src/components/Grid.vue?vue&type=script&lang=js&
@@ -18238,7 +18441,7 @@ function applyToTag (styleElement, obj) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(594);
+/******/ 	var __webpack_exports__ = __webpack_require__(196);
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
