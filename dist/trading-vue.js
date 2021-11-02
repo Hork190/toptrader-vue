@@ -1,5 +1,5 @@
 /*!
- * TradingVue.JS - v1.0.0 - Mon Oct 11 2021
+ * TradingVue.JS - v1.0.1 - Tue Nov 02 2021
  *     https://github.com/tvjsx/trading-vue-js
  *     Copyright (c) 2019 C451 Code's All Right;
  *     Licensed under the MIT license
@@ -395,7 +395,7 @@ module.exports.isSortableArrayLike = function (o) {
 
 /***/ }),
 
-/***/ 196:
+/***/ 754:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7051,6 +7051,214 @@ var DarkEmptyCandles_component = normalizeComponent(
 if (false) { var DarkEmptyCandles_api; }
 DarkEmptyCandles_component.options.__file = "src/components/overlays/DarkEmptyCandles.vue"
 /* harmony default export */ const DarkEmptyCandles = (DarkEmptyCandles_component.exports);
+;// CONCATENATED MODULE: ./src/components/primitives/hollowCandles.js
+
+
+
+var hollowCandles_CandleExt = /*#__PURE__*/function () {
+  function CandleExt(overlay, ctx, data) {
+    classCallCheck_classCallCheck(this, CandleExt);
+
+    this.ctx = ctx;
+    this.self = overlay;
+    this.style = data.raw[6] || this.self;
+    this.draw(data);
+  }
+
+  createClass_createClass(CandleExt, [{
+    key: "draw",
+    value: function draw(data) {
+      var green = data.raw[4] >= data.raw[1];
+      var body_color = green ? this.style.colorCandleUp : this.style.colorCandleDw;
+      var wick_color = green ? this.style.colorWickUp : this.style.colorWickDw;
+      var wick_color_sm = this.style.colorWickSm;
+      var w = Math.max(data.w, 1);
+      var hw = Math.max(Math.floor(w * 0.5), 1);
+      var h = Math.abs(data.o - data.c);
+      var max_h = data.c === data.o ? 1 : 2;
+      var x05 = Math.floor(data.x) - 0.5;
+      this.ctx.strokeStyle = w > 1 ? wick_color : wick_color_sm;
+
+      if (!green) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.h)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.o));
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.l)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.c));
+        this.ctx.stroke();
+      } else {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.h)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.c));
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(data.l)); // this.ctx.lineTo(x05, Math.floor(data.l))
+
+        this.ctx.lineTo(x05, Math.floor(data.o));
+        this.ctx.stroke();
+      }
+
+      if (data.w > 1.5) {
+        this.ctx.strokeStyle = body_color; // TODO: Move common calculations to layout.js
+
+        var s = green ? 1 : -1; // if (green)
+
+        this.ctx.strokeRect(Math.floor(data.x - hw - 1), data.c, Math.floor(hw * 2 + 1), s * Math.max(h, max_h)); // else
+        //     this.ctx.fillRect(
+        //         Math.floor(data.x - hw - 1),
+        //         data.c,
+        //         Math.floor(hw * 2 + 1),
+        //         s * Math.max(h, max_h),
+        //     )
+      } else {
+        this.ctx.strokeStyle = body_color;
+        this.ctx.beginPath();
+        this.ctx.moveTo(x05, Math.floor(Math.min(data.o, data.c)));
+        this.ctx.lineTo(x05, Math.floor(Math.max(data.o, data.c)) + (data.o === data.c ? 1 : 0));
+        this.ctx.stroke();
+      }
+    }
+  }]);
+
+  return CandleExt;
+}();
+
+
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/components/overlays/HollowCandles.vue?vue&type=script&lang=js&
+// Renedrer for candlesticks + volume (optional)
+// It can be used as the main chart or an indicator
+
+
+
+
+
+/* harmony default export */ const HollowCandlesvue_type_script_lang_js_ = ({
+  name: 'HollowCandles',
+  mixins: [overlay],
+  data: function data() {
+    return {
+      price: {}
+    };
+  },
+  // Define internal setting & constants here
+  computed: {
+    sett: function sett() {
+      return this.$props.settings;
+    },
+    show_volume: function show_volume() {
+      return 'showVolume' in this.sett ? this.sett.showVolume : true;
+    },
+    price_line: function price_line() {
+      return 'priceLine' in this.sett ? this.sett.priceLine : true;
+    },
+    colorCandleUp: function colorCandleUp() {
+      return this.sett.colorCandleUp || this.$props.colors.candleUp;
+    },
+    colorCandleDw: function colorCandleDw() {
+      return this.sett.colorCandleDw || this.$props.colors.candleDw;
+    },
+    colorWickUp: function colorWickUp() {
+      return this.sett.colorWickUp || this.$props.colors.wickUp;
+    },
+    colorWickDw: function colorWickDw() {
+      return this.sett.colorWickDw || this.$props.colors.wickDw;
+    },
+    colorWickSm: function colorWickSm() {
+      return this.sett.colorWickSm || this.$props.colors.wickSm;
+    },
+    colorVolUp: function colorVolUp() {
+      return this.sett.colorVolUp || this.$props.colors.volUp;
+    },
+    colorVolDw: function colorVolDw() {
+      return this.sett.colorVolDw || this.$props.colors.volDw;
+    }
+  },
+  methods: {
+    meta_info: function meta_info() {
+      return {
+        author: 'C451',
+        version: '1.2.1'
+      };
+    },
+    init: function init() {
+      this.price = new Price(this);
+    },
+    draw: function draw(ctx) {
+      // If data === main candlestick data
+      // render as main chart:
+      if (this.$props.sub === this.$props.data) {
+        var cnv = {
+          candles: this.$props.layout.candles,
+          volume: this.$props.layout.volume
+        }; // Else, as offchart / onchart indicator:
+      } else {
+        cnv = layout_cnv(this);
+      }
+
+      if (this.show_volume) {
+        var cv = cnv.volume;
+
+        for (var i = 0, n = cv.length; i < n; i++) {
+          new VolbarExt(this, ctx, cv[i]);
+        }
+      }
+
+      var cc = cnv.candles; // eslint-disable-next-line no-redeclare
+
+      for (var i = 0, n = cc.length; i < n; i++) {
+        new hollowCandles_CandleExt(this, ctx, cc[i]);
+      }
+
+      if (this.price_line) this.price.draw(ctx);
+    },
+    use_for: function use_for() {
+      return ['HollowCandles'];
+    },
+    // In case it's added as offchart overlay
+    y_range: function y_range() {
+      var hi = -Infinity,
+          lo = Infinity;
+
+      for (var i = 0, n = this.sub.length; i < n; i++) {
+        var x = this.sub[i];
+        if (x[2] > hi) hi = x[2];
+        if (x[3] < lo) lo = x[3];
+      }
+
+      return [hi, lo];
+    }
+  }
+});
+;// CONCATENATED MODULE: ./src/components/overlays/HollowCandles.vue?vue&type=script&lang=js&
+ /* harmony default export */ const overlays_HollowCandlesvue_type_script_lang_js_ = (HollowCandlesvue_type_script_lang_js_); 
+;// CONCATENATED MODULE: ./src/components/overlays/HollowCandles.vue
+var HollowCandles_render, HollowCandles_staticRenderFns
+;
+
+
+
+/* normalize component */
+;
+var HollowCandles_component = normalizeComponent(
+  overlays_HollowCandlesvue_type_script_lang_js_,
+  HollowCandles_render,
+  HollowCandles_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var HollowCandles_api; }
+HollowCandles_component.options.__file = "src/components/overlays/HollowCandles.vue"
+/* harmony default export */ const HollowCandles = (HollowCandles_component.exports);
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/components/Grid.vue?vue&type=script&lang=js&
 function Gridvue_type_script_lang_js_createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = Gridvue_type_script_lang_js_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -7059,6 +7267,7 @@ function Gridvue_type_script_lang_js_unsupportedIterableToArray(o, minLen) { if 
 function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 // Sets up all layers/overlays for the grid with 'grid_id'
+
 
 
 
@@ -7213,7 +7422,7 @@ function Gridvue_type_script_lang_js_arrayLikeToArray(arr, len) { if (len == nul
     var _this3 = this;
 
     // List of all possible overlays (builtin + custom)
-    this._list = [Spline, Splines, Range, Trades, Channel, Segment, Candles, Volume, Splitters, LineTool, RangeTool, EmptyCandles, DarkEmptyCandles].concat(this.$props.overlays);
+    this._list = [Spline, Splines, Range, Trades, Channel, Segment, Candles, Volume, Splitters, LineTool, RangeTool, EmptyCandles, DarkEmptyCandles, HollowCandles].concat(this.$props.overlays);
     this._registry = {}; // We need to know which components we will use.
     // Custom overlay components overwrite built-ins:
 
@@ -8885,6 +9094,12 @@ var TI = /*#__PURE__*/function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -8898,12 +9113,181 @@ var TI = /*#__PURE__*/function () {
 
 /* harmony default export */ const Chartvue_type_script_lang_js_ = ({
   name: 'Chart',
-  props: ['title_txt', 'data', 'width', 'height', 'font', 'colors', 'overlays', 'tv_id', 'config', 'buttons', 'toolbar', 'ib', 'skin', 'timezone'],
-  mixins: [shaders, datatrack],
   components: {
     GridSection: Section,
     Botbar: components_Botbar,
     Keyboard: Keyboard
+  },
+  mixins: [shaders, datatrack],
+  props: ['title_txt', 'data', 'width', 'height', 'font', 'colors', 'overlays', 'tv_id', 'config', 'buttons', 'toolbar', 'ib', 'skin', 'timezone'],
+  data: function data() {
+    return {
+      // Current data slice
+      sub: [],
+      // Time range
+      range: [],
+      // Candlestick interval
+      interval: 0,
+      // Crosshair states
+      cursor: {
+        x: null,
+        y: null,
+        t: null,
+        y$: null,
+        grid_id: null,
+        locked: false,
+        values: {},
+        scroll_lock: false,
+        mode: utils.xmode()
+      },
+      // A trick to re-render botbar
+      rerender: 0,
+      // Layers meta-props (changing behaviour)
+      layers_meta: {},
+      // Y-transforms (for y-zoom and -shift)
+      y_transforms: {},
+      // Default OHLCV settings (when using DataStructure v1.0)
+      settings_ohlcv: {},
+      // Default overlay settings
+      settings_ov: {},
+      // Meta data
+      last_candle: [],
+      last_values: {},
+      sub_start: undefined,
+      activated: false
+    };
+  },
+  computed: {
+    // Component-specific props subsets:
+    main_section: function main_section() {
+      var p = Object.assign({}, this.common_props());
+      p.data = this.overlay_subset(this.onchart, 'onchart');
+      p.data.push({
+        type: this.chart.type || 'HollowCandles',
+        main: true,
+        data: this.sub,
+        i0: this.sub_start,
+        settings: this.chart.settings || this.settings_ohlcv,
+        grid: this.chart.grid || {},
+        last: this.last_candle
+      });
+      p.overlays = this.$props.overlays;
+      return p;
+    },
+    sub_section: function sub_section() {
+      var p = Object.assign({}, this.common_props());
+      p.data = this.overlay_subset(this.offchart, 'offchart');
+      p.overlays = this.$props.overlays;
+      return p;
+    },
+    botbar_props: function botbar_props() {
+      var p = Object.assign({}, this.common_props());
+      p.width = p.layout.botbar.width;
+      p.height = p.layout.botbar.height;
+      p.rerender = this.rerender;
+      return p;
+    },
+    offsub: function offsub() {
+      return this.overlay_subset(this.offchart, 'offchart');
+    },
+    // Datasets: candles, onchart, offchart indicators
+    ohlcv: function ohlcv() {
+      return this.$props.data.ohlcv || this.chart.data || [];
+    },
+    chart: function chart() {
+      return this.$props.data.chart || {
+        grid: {}
+      };
+    },
+    onchart: function onchart() {
+      return this.$props.data.onchart || [];
+    },
+    offchart: function offchart() {
+      return this.$props.data.offchart || [];
+    },
+    filter: function filter() {
+      return this.$props.ib ? utils.fast_filter_i : utils.fast_filter;
+    },
+    styles: function styles() {
+      var w = this.$props.toolbar ? this.$props.config.TOOLBAR : 0;
+      return {
+        'margin-left': "".concat(w, "px")
+      };
+    },
+    meta: function meta() {
+      return {
+        last: this.last_candle,
+        sub_start: this.sub_start,
+        activated: this.activated
+      };
+    },
+    forced_tf: function forced_tf() {
+      return this.chart.tf;
+    }
+  },
+  watch: {
+    width: function width() {
+      this.update_layout();
+      if (this._hook_resize) this.ce('?chart-resize');
+    },
+    height: function height() {
+      this.update_layout();
+      if (this._hook_resize) this.ce('?chart-resize');
+    },
+    ib: function ib(nw) {
+      if (!nw) {
+        // Change range index => time
+        var t1 = this.ti_map.i2t(this.range[0]);
+        var t2 = this.ti_map.i2t(this.range[1]);
+        utils.overwrite(this.range, [t1, t2]);
+        this.interval = this.interval_ms;
+      } else {
+        this.init_range(); // TODO: calc index range instead
+
+        utils.overwrite(this.range, this.range);
+        this.interval = 1;
+      }
+
+      var sub = this.subset();
+      utils.overwrite(this.sub, sub);
+      this.update_layout();
+    },
+    timezone: function timezone() {
+      this.update_layout();
+    },
+    colors: function colors() {
+      utils.overwrite(this.range, this.range);
+    },
+    forced_tf: function forced_tf(n, p) {
+      this.update_layout(true);
+      this.ce('exec-all-scripts');
+    },
+    data: {
+      handler: function handler(n, p) {
+        if (!this.sub.length) this.init_range();
+        var sub = this.subset(); // Fixes Infinite loop warn, when the subset is empty
+        // TODO: Consider removing 'sub' from data entirely
+
+        if (this.sub.length || sub.length) {
+          utils.overwrite(this.sub, sub);
+        }
+
+        var nw = this.data_changed();
+        this.update_layout(nw);
+        utils.overwrite(this.range, this.range);
+        this.cursor.scroll_lock = !!n.scrollLock;
+
+        if (n.scrollLock && this.cursor.locked) {
+          this.cursor.locked = false;
+        }
+
+        if (this._hook_data) this.ce('?chart-data', nw);
+        this.update_last_values(); // TODO: update legend values for overalys
+
+        this.rerender++;
+      },
+      deep: true
+    }
   },
   created: function created() {
     // Context for text measurements
@@ -9132,175 +9516,6 @@ var TI = /*#__PURE__*/function () {
       list.forEach(function (x) {
         return _this4["_hook_".concat(x)] = true;
       });
-    }
-  },
-  computed: {
-    // Component-specific props subsets:
-    main_section: function main_section() {
-      var p = Object.assign({}, this.common_props());
-      p.data = this.overlay_subset(this.onchart, 'onchart');
-      p.data.push({
-        type: this.chart.type || 'EmptyCandles',
-        main: true,
-        data: this.sub,
-        i0: this.sub_start,
-        settings: this.chart.settings || this.settings_ohlcv,
-        grid: this.chart.grid || {},
-        last: this.last_candle
-      });
-      p.overlays = this.$props.overlays;
-      return p;
-    },
-    sub_section: function sub_section() {
-      var p = Object.assign({}, this.common_props());
-      p.data = this.overlay_subset(this.offchart, 'offchart');
-      p.overlays = this.$props.overlays;
-      return p;
-    },
-    botbar_props: function botbar_props() {
-      var p = Object.assign({}, this.common_props());
-      p.width = p.layout.botbar.width;
-      p.height = p.layout.botbar.height;
-      p.rerender = this.rerender;
-      return p;
-    },
-    offsub: function offsub() {
-      return this.overlay_subset(this.offchart, 'offchart');
-    },
-    // Datasets: candles, onchart, offchart indicators
-    ohlcv: function ohlcv() {
-      return this.$props.data.ohlcv || this.chart.data || [];
-    },
-    chart: function chart() {
-      return this.$props.data.chart || {
-        grid: {}
-      };
-    },
-    onchart: function onchart() {
-      return this.$props.data.onchart || [];
-    },
-    offchart: function offchart() {
-      return this.$props.data.offchart || [];
-    },
-    filter: function filter() {
-      return this.$props.ib ? utils.fast_filter_i : utils.fast_filter;
-    },
-    styles: function styles() {
-      var w = this.$props.toolbar ? this.$props.config.TOOLBAR : 0;
-      return {
-        'margin-left': "".concat(w, "px")
-      };
-    },
-    meta: function meta() {
-      return {
-        last: this.last_candle,
-        sub_start: this.sub_start,
-        activated: this.activated
-      };
-    },
-    forced_tf: function forced_tf() {
-      return this.chart.tf;
-    }
-  },
-  data: function data() {
-    return {
-      // Current data slice
-      sub: [],
-      // Time range
-      range: [],
-      // Candlestick interval
-      interval: 0,
-      // Crosshair states
-      cursor: {
-        x: null,
-        y: null,
-        t: null,
-        y$: null,
-        grid_id: null,
-        locked: false,
-        values: {},
-        scroll_lock: false,
-        mode: utils.xmode()
-      },
-      // A trick to re-render botbar
-      rerender: 0,
-      // Layers meta-props (changing behaviour)
-      layers_meta: {},
-      // Y-transforms (for y-zoom and -shift)
-      y_transforms: {},
-      // Default OHLCV settings (when using DataStructure v1.0)
-      settings_ohlcv: {},
-      // Default overlay settings
-      settings_ov: {},
-      // Meta data
-      last_candle: [],
-      last_values: {},
-      sub_start: undefined,
-      activated: false
-    };
-  },
-  watch: {
-    width: function width() {
-      this.update_layout();
-      if (this._hook_resize) this.ce('?chart-resize');
-    },
-    height: function height() {
-      this.update_layout();
-      if (this._hook_resize) this.ce('?chart-resize');
-    },
-    ib: function ib(nw) {
-      if (!nw) {
-        // Change range index => time
-        var t1 = this.ti_map.i2t(this.range[0]);
-        var t2 = this.ti_map.i2t(this.range[1]);
-        utils.overwrite(this.range, [t1, t2]);
-        this.interval = this.interval_ms;
-      } else {
-        this.init_range(); // TODO: calc index range instead
-
-        utils.overwrite(this.range, this.range);
-        this.interval = 1;
-      }
-
-      var sub = this.subset();
-      utils.overwrite(this.sub, sub);
-      this.update_layout();
-    },
-    timezone: function timezone() {
-      this.update_layout();
-    },
-    colors: function colors() {
-      utils.overwrite(this.range, this.range);
-    },
-    forced_tf: function forced_tf(n, p) {
-      this.update_layout(true);
-      this.ce('exec-all-scripts');
-    },
-    data: {
-      handler: function handler(n, p) {
-        if (!this.sub.length) this.init_range();
-        var sub = this.subset(); // Fixes Infinite loop warn, when the subset is empty
-        // TODO: Consider removing 'sub' from data entirely
-
-        if (this.sub.length || sub.length) {
-          utils.overwrite(this.sub, sub);
-        }
-
-        var nw = this.data_changed();
-        this.update_layout(nw);
-        utils.overwrite(this.range, this.range);
-        this.cursor.scroll_lock = !!n.scrollLock;
-
-        if (n.scrollLock && this.cursor.locked) {
-          this.cursor.locked = false;
-        }
-
-        if (this._hook_data) this.ce('?chart-data', nw);
-        this.update_last_values(); // TODO: update legend values for overalys
-
-        this.rerender++;
-      },
-      deep: true
     }
   }
 });
@@ -18441,7 +18656,7 @@ function applyToTag (styleElement, obj) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(196);
+/******/ 	var __webpack_exports__ = __webpack_require__(754);
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()

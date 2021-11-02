@@ -21,6 +21,7 @@ import Splitters from "./overlays/Splitters.vue"
 import LineTool from "./overlays/LineTool.vue"
 import RangeTool from "./overlays/RangeTool.vue"
 import DarkEmptyCandles from "./overlays/DarkEmptyCandles.vue"
+import HollowCandles from "./overlays/HollowCandles.vue"
 
 export default {
     name: 'Grid',
@@ -119,7 +120,7 @@ export default {
         // List of all possible overlays (builtin + custom)
         this._list = [
             Spline, Splines, Range, Trades, Channel, Segment,
-            Candles, Volume, Splitters, LineTool, RangeTool,EmptyCandles,DarkEmptyCandles
+            Candles, Volume, Splitters, LineTool, RangeTool,EmptyCandles,DarkEmptyCandles, HollowCandles
         ]
         .concat(this.$props.overlays)
         this._registry = {}
