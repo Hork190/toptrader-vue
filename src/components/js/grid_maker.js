@@ -89,7 +89,7 @@ function GridMaker(id, params, master_grid = null, precision) {
         if (sub.length < 2) {
             self.prec = 0
             self.sb = $p.config.SBMIN
-            return
+            return false
         }
 
         // TODO: improve sidebar width calculation
@@ -98,7 +98,6 @@ function GridMaker(id, params, master_grid = null, precision) {
 
         // Gets formated levels (their lengths),
         // calculates max and measures the sidebar length
-        // from it:
 
         // TODO: add custom formatter f()
 
