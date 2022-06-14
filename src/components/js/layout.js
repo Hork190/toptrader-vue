@@ -14,7 +14,7 @@ function Layout(params) {
 
     let {
         chart, sub, offsub, interval, range, ctx, layers_meta,
-        ti_map, $props:$p, y_transforms: y_ts
+        ti_map, $props:$p, y_transforms: y_ts, precision
     } = params
 
     let mgrid = chart.grid || {}
@@ -109,7 +109,7 @@ function Layout(params) {
         ti_map, height: hs[0], y_t: y_ts[0],
         grid: mgrid, timezone: $p.timezone
     }
-    let gms = [new GridMaker(0, specs)]
+    let gms = [new GridMaker(0, specs, null, precision)]
 
     // Sub grids
     for (var [i, { data, grid }] of offsub.entries()) {

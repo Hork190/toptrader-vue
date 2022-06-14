@@ -1,36 +1,50 @@
 
 <template>
     <!-- Main component  -->
-    <div class="trading-vue" v-bind:id="id"
-        @mousedown="mousedown" @mouseleave="mouseleave"
-         :style="{
-            color: this.chart_props.colors.text,
-            font: this.font_comp,
-            width: this.width+'px',
-            height: this.height+'px'}">
-        <toolbar v-if="toolbar"
+    <div
+:id="id"
+class="trading-vue"
+        :style="{
+            color: chart_props.colors.text,
+            font: font_comp,
+            width: width+'px',
+            height: height+'px'}"
+@mousedown="mousedown"
+         @mouseleave="mouseleave"
+>
+        <toolbar
+v-if="toolbar"
             ref="toolbar"
-            v-on:custom-event="custom_event"
             v-bind="chart_props"
-            v-bind:config="chart_config">
-        </toolbar>
-        <widgets v-if="controllers.length"
+            :config="chart_config"
+            @custom-event="custom_event"
+/>
+        <widgets
+v-if="controllers.length"
             ref="widgets"
-            :map="ws" :width="width" :height="height"
-            :tv="this" :dc="data">
-        </widgets>
-        <chart :key="reset"
+            :map="ws"
+:width="width"
+:height="height"
+            :tv="this"
+:dc="data"
+/>
+        <chart
+:key="reset"
             ref="chart"
             v-bind="chart_props"
-            v-bind:tv_id="id"
-            v-bind:config="chart_config"
-            v-on:custom-event="custom_event"
-            v-on:range-changed="range_changed"
-            v-on:legend-button-click="legend_button">
-        </chart>
+            :tv_id="id"
+            :config="chart_config"
+            :precision="precision"
+            @custom-event="custom_event"
+            @range-changed="range_changed"
+            @legend-button-click="legend_button"
+/>
         <transition name="tvjs-drift">
-            <the-tip :data="tip" v-if="tip"
-                @remove-me="tip = null"/>
+            <the-tip
+v-if="tip"
+:data="tip"
+                @remove-me="tip = null"
+/>
         </transition>
     </div>
 </template>
@@ -182,7 +196,14 @@ export default {
         timezone: {
             type: Number,
             default: 0
+        },
+        precision: {
+            type: Number,
+            default: 0
         }
+    },
+    data() {
+        return { reset: 0, tip: null }
     },
     computed: {
         // Copy a subset of TradingVue props
@@ -245,9 +266,6 @@ export default {
             return this.skin_proto && this.skin_proto.font ?
                 this.skin_proto.font : this.font
         }
-    },
-    data() {
-        return { reset: 0, tip: null }
     },
     beforeDestroy() {
         this.custom_event({ event: 'before-destroy' })

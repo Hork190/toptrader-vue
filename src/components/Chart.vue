@@ -6,7 +6,7 @@ class="trading-vue-chart"
 >
         <keyboard ref="keyboard" />
         <grid-section
-v-for="(grid, i) in this._layout.grids"
+v-for="(grid, i) in _layout.grids"
             :key="grid.id"
 ref="sec"
             :common="section_props(i)"
@@ -55,7 +55,7 @@ export default {
     props: [
         'title_txt', 'data', 'width', 'height', 'font', 'colors',
         'overlays', 'tv_id', 'config', 'buttons', 'toolbar', 'ib',
-        'skin', 'timezone'
+        'skin', 'timezone', "precision"
     ],
     data() {
         return {

@@ -10,7 +10,7 @@ const MAX_INT = Number.MAX_SAFE_INTEGER
 
 
 // master_grid - ref to the master grid
-function GridMaker(id, params, master_grid = null) {
+function GridMaker(id, params, master_grid = null, precision) {
 
 
     let {
@@ -102,7 +102,7 @@ function GridMaker(id, params, master_grid = null) {
 
         // TODO: add custom formatter f()
 
-        self.prec = calc_precision(sub)
+        self.prec = precision || calc_precision(sub)
         let lens = []
         lens.push(self.$_hi.toFixed(self.prec).length)
         lens.push(self.$_lo.toFixed(self.prec).length)
