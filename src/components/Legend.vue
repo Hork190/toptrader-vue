@@ -1,7 +1,9 @@
 <template>
-<div class="trading-vue-legend"
-     v-bind:style="calc_style">
-    <div v-if="grid_id === 0"
+<div
+class="trading-vue-legend"
+     :style="calc_style"
+>
+    <!-- <div v-if="grid_id === 0"
          class="trading-vue-ohlcv"
         :style = "{ 'max-width': common.width + 'px' }">
         <span class="t-vue-title"
@@ -19,32 +21,46 @@
             :style="{color: common.colors.text}">
             {{(common.meta.last || [])[4]}}
         </span>
-    </div>
-    <div class="t-vue-ind" v-for="ind in this.indicators">
-        <span class="t-vue-iname">{{ind.name}}</span>
+    </div> -->
+    <div
+v-for="ind in indicators"
+class="t-vue-ind"
+>
+        <span class="t-vue-iname">{{ ind.name }}</span>
         <button-group
-            v-bind:buttons="common.buttons"
-            v-bind:config="common.config"
-            v-bind:ov_id="ind.id"
-            v-bind:grid_id="grid_id"
-            v-bind:index="ind.index"
-            v-bind:tv_id="common.tv_id"
-            v-bind:display="ind.v"
-            v-on:legend-button-click="button_click">
-        </button-group>
-        <span class="t-vue-ivalues" v-if="ind.v">
-            <span class="t-vue-lspan t-vue-ivalue"
+            :buttons="common.buttons"
+            :config="common.config"
+            :ov_id="ind.id"
+            :grid_id="grid_id"
+            :index="ind.index"
+            :tv_id="common.tv_id"
+            :display="ind.v"
+            @legend-button-click="button_click"
+/>
+        <span
+v-if="ind.v"
+class="t-vue-ivalues"
+>
+            <span
+v-for="v in ind.values"
                 v-if="show_values"
-                v-for="v in ind.values" :style="{ color: v.color }">
-                {{v.value}}
+                class="t-vue-lspan t-vue-ivalue"
+:style="{ color: v.color }"
+>
+                {{ v.value }}
             </span>
         </span>
-        <span v-if="ind.unk" class="t-vue-unknown">
+        <span
+v-if="ind.unk"
+class="t-vue-unknown"
+>
             (Unknown type)
         </span>
         <transition name="tvjs-appear">
-            <spinner :colors="common.colors" v-if="ind.loading">
-            </spinner>
+            <spinner
+v-if="ind.loading"
+:colors="common.colors"
+/>
         </transition>
     </div>
 </div>
@@ -56,10 +72,10 @@ import Spinner from './Spinner.vue'
 
 export default {
     name: 'ChartLegend',
+    components: { ButtonGroup, Spinner },
     props: [
         'common', 'values', 'grid_id', 'meta_props'
     ],
-    components: { ButtonGroup, Spinner },
     computed: {
         ohlcv() {
             if (!this.$props.values || !this.$props.values.ohlcv) {
