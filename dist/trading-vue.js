@@ -1,5 +1,5 @@
 /*!
- * TradingVue.JS - v1.2.0 - Thu Jun 16 2022
+ * TradingVue.JS - v1.4.0 - Tue Jun 21 2022
  *     https://github.com/tvjsx/trading-vue-js
  *     Copyright (c) 2019 C451 Code's All Right;
  *     Licensed under the MIT license
@@ -12812,10 +12812,10 @@ var Legendvue_type_template_id_34724886_render = function () {
   return _c(
     "div",
     { staticClass: "trading-vue-legend", style: _vm.calc_style },
-    _vm._l(_vm.indicators, function (ind) {
+    _vm._l(_vm.indicators, function (ind, i) {
       return _c(
         "div",
-        { staticClass: "t-vue-ind" },
+        { key: ind.id + "__" + ind.name + "__" + i, staticClass: "t-vue-ind" },
         [
           _c("span", { staticClass: "t-vue-iname" }, [
             _vm._v(_vm._s(ind.name)),
@@ -12843,14 +12843,15 @@ var Legendvue_type_template_id_34724886_render = function () {
                     ? _c(
                         "span",
                         {
+                          key: v.value,
                           staticClass: "t-vue-lspan t-vue-ivalue",
                           style: { color: v.color },
                         },
                         [
                           _vm._v(
-                            "\r\n                " +
+                            "\n                " +
                               _vm._s(v.value) +
-                              "\r\n            "
+                              "\n            "
                           ),
                         ]
                       )
@@ -12862,7 +12863,7 @@ var Legendvue_type_template_id_34724886_render = function () {
           _vm._v(" "),
           ind.unk
             ? _c("span", { staticClass: "t-vue-unknown" }, [
-                _vm._v("\r\n            (Unknown type)\r\n        "),
+                _vm._v("\n            (Unknown type)\n        "),
               ])
             : _vm._e(),
           _vm._v(" "),
@@ -13150,6 +13151,9 @@ if (false) { var Spinner_api; }
 Spinner_component.options.__file = "src/components/Spinner.vue"
 /* harmony default export */ const Spinner = (Spinner_component.exports);
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/components/Legend.vue?vue&type=script&lang=js&
+//
+//
+//
 //
 //
 //

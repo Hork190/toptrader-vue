@@ -77,7 +77,7 @@ export default {
     name: 'ChartLegend',
     components: { ButtonGroup, Spinner },
     props: [
-        'common', 'values', 'grid_id', 'meta_props'
+        'common', 'values', 'grid_id', "meta_props"
     ],
     computed: {
         ohlcv() {
