@@ -2,13 +2,13 @@
     <!-- Horizontal section: (grid + sidebar) -->
     <div class="trading-vue-section">
         <chart-legend
-ref="legend"
+            ref="legend"
             :values="section_values"
             :grid_id="grid_id"
             :common="legend_props"
             :meta_props="get_meta_props"
             @legend-button-click="button_click"
-/>
+        />
         <grid
 v-bind="grid_props"
 ref="grid"

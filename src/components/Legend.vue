@@ -1,7 +1,8 @@
 <template>
+ <!-- eslint-disable vue/no-use-v-if-with-v-for  -->
 <div
-class="trading-vue-legend"
-     :style="calc_style"
+    class="trading-vue-legend"
+    :style="calc_style"
 >
     <!-- <div v-if="grid_id === 0"
          class="trading-vue-ohlcv"
@@ -23,9 +24,10 @@ class="trading-vue-legend"
         </span>
     </div> -->
     <div
-v-for="ind in indicators"
-class="t-vue-ind"
->
+        v-for="(ind, i) in indicators"
+        :key="`${ind.id}__${ind.name}__${i}`"
+        class="t-vue-ind"
+    >
         <span class="t-vue-iname">{{ ind.name }}</span>
         <button-group
             :buttons="common.buttons"
@@ -36,31 +38,32 @@ class="t-vue-ind"
             :tv_id="common.tv_id"
             :display="ind.v"
             @legend-button-click="button_click"
-/>
+        />
         <span
-v-if="ind.v"
-class="t-vue-ivalues"
->
+            v-if="ind.v"
+            class="t-vue-ivalues"
+        >
             <span
-v-for="v in ind.values"
+                v-for="v in ind.values"
                 v-if="show_values"
+                :key="v.value"
                 class="t-vue-lspan t-vue-ivalue"
-:style="{ color: v.color }"
->
+                :style="{ color: v.color }"
+            >
                 {{ v.value }}
             </span>
         </span>
         <span
-v-if="ind.unk"
-class="t-vue-unknown"
->
+            v-if="ind.unk"
+            class="t-vue-unknown"
+        >
             (Unknown type)
         </span>
         <transition name="tvjs-appear">
-            <spinner
-v-if="ind.loading"
-:colors="common.colors"
-/>
+        <spinner
+            v-if="ind.loading"
+            :colors="common.colors"
+        />
         </transition>
     </div>
 </div>
