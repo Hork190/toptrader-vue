@@ -1,6 +1,6 @@
 {
   "name": "toptrader-vue-js",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Toptrader lib",
   "main": "./dist/trading-vue.js",
   "scripts": {
